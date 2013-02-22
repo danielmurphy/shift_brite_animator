@@ -22,8 +22,12 @@ void setup() {
   // shield.draw();
   // delay(500);
   // animator.clear();
+  // animator.powerUp(1000);
+  // animator.powerDown(1000);
 
-  animator.powerUp(5000);
+  animator.clear();
+  animator.fill(8, 0, false);
+
 }
 
 
