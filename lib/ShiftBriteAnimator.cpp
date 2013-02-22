@@ -1,12 +1,12 @@
 class ShiftBriteAnimator {
 public:
   LED color;
-  int numLeds, time;
+  int time;
 
-  ShiftBriteAnimator(ShiftBriteShield *s, int l = NUM_LEDS) {
+  ShiftBriteAnimator(ShiftBriteShield *s) {
     shield = s;
-    numLeds = l;
-    color.set(255,0,0);
+    length = shield->ledsCount();
+    color.set(128, 0, 0);
     time = 1000;
   }
 
@@ -14,41 +14,37 @@ public:
     shield->clear();
   }
 
-  void fill(int startAt = 0, int endAt = NUM_LEDS - 1, bool forwards = true) {
+  void fill(int startAt = 0, int endAt = NULL, bool forwards = true) {
+    if (endAt == NULL) endAt = length;
+
     int i = startAt;
-
     while (true) {
-      shield->lights[i].set(color);
+      shield->set(i,color);
       shield->draw();
-      delay(time/numLeds);
 
-      if (i == endAt) {
-        break;
-      }
+      if (i == endAt) break;
+      i = moveIndex(i, forwards);
 
-      if (forwards) {
-        i++;
-        if (i >= NUM_LEDS) {
-          i = 0;
-        }
-      } else {
-        i--;
-        if (i < 0) {
-          i = NUM_LEDS - 1;
-        }
-      }
+      delay(msPerLed());
     }
-  }
-
-  void powerUp(int time){
-    for (int i = 0; i < numLeds; i++) {
-      shield->lights[i].set(color);
-    }
-  }
-
-  void powerDown(int time){
   }
 
 private:
+  int length;
   ShiftBriteShield *shield;
+
+  int msPerLed() {
+    return time / length;
+  }
+
+  int moveIndex(int i, bool forwards) {
+    if (forwards) {
+      i++;
+      if (i >= length) i = 0;
+    } else {
+      i--;
+      if (i < 0) i = length - 1;
+    }
+    return i;
+  }
 };

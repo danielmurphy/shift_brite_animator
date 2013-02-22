@@ -1,9 +1,16 @@
+#define DATA_PIN 11 // DI
+#define LATCH_PIN 9 // LI
+#define ENABLE_PIN 10 // EI
+#define CLOCK_PIN 13 // CI
+
+
 class ShiftBriteShield {
 public:
-  int dataPin, latchPin, enablePin, clockPin;
-  LED lights[NUM_LEDS];
+  LED *lights;
 
-  ShiftBriteShield (int dp, int lp, int ep, int cp){
+  ShiftBriteShield (LED* l, int len, int dp = DATA_PIN, int lp = LATCH_PIN, int ep = ENABLE_PIN, int cp = CLOCK_PIN){
+    lights = l;
+    length = len;
     dataPin = dp;
     latchPin = lp;
     enablePin = ep;
@@ -18,15 +25,19 @@ public:
     digitalWrite(enablePin, LOW);
   }
 
+  void set(int index, LED color) {
+    lights[index].set(color);
+  }
+
   void clear() {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < length; i++) {
       lights[i].off();
     }
     draw();
   }
 
   void draw() {
-    for (int i = 0; i < NUM_LEDS; i++) {
+    for (int i = 0; i < length; i++) {
       sendPacket(B00, lights[i]);
     }
 
@@ -35,16 +46,20 @@ public:
     delayMicroseconds(15);
     digitalWrite(latchPin,LOW);
 
-    for (int i = 0; i < NUM_LEDS; i++) sendPacket(B01, lights[i]);
+    for (int i = 0; i < length; i++) sendPacket(B01, lights[i]);
       delayMicroseconds(15);
       digitalWrite(latchPin,HIGH); // latch data into registers
       delayMicroseconds(15);
       digitalWrite(latchPin,LOW);
   }
 
+  int ledsCount(){
+    return length;
+  }
+
 private:
   int redCommand, greenCommand, blueCommand;
-
+  int dataPin, latchPin, enablePin, clockPin, length;
 
   void sendPacket(int commandMode, LED led) {
     if (commandMode == B01) {
