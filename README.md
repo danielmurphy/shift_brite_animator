@@ -33,3 +33,6 @@ Check the method definitions in ```ShiftBriteAnimator.cpp``` for options availab
 
 ## Pull Requests
 I'd love pull requests, especially with new / improved animations and hitting me with some C++ knowledge.
+
+## Shoutouts
+Some of the code in the ShiftBriteShield class came from the examples on Macetech's site. http://macetech.com/blog/node/54
