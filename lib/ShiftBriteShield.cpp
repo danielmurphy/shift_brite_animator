@@ -25,8 +25,9 @@ public:
     digitalWrite(enablePin, LOW);
   }
 
-  void set(int index, LED color) {
+  void set(int index, LED color, bool render = true) {
     lights[index].set(color);
+    if (render) draw();
   }
 
   void clear() {

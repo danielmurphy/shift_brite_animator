@@ -9,11 +9,13 @@ ShiftBriteShield shield (lights, NUM_LEDS);
 ShiftBriteAnimator animator(&shield);
 
 void setup() {
-  animator.clear();
-  animator.fill();
 
 }
 
 
 void loop() {
+  animator.fill();
+  shield.clear();
+  animator.chase();
+  shield.clear();
 }
